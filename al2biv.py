@@ -31,7 +31,6 @@ transformed_iris = X_raw
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-
 '''
 # Isolate the data we'll need for plotting.
 x_component, y_component = transformed_iris[:, 0], transformed_iris[:, 1]
@@ -42,7 +41,7 @@ plt.scatter(x=x_component, y=y_component, c=y_raw, cmap='viridis', s=50, alpha=8
 plt.title('Iris classes after PCA transformation')
 plt.show()
 '''
-  
+
 # Isolate our examples for our labeled dataset.
 percent = 0.1
 n_labeled_examples = X_raw.shape[0] # len
@@ -91,7 +90,8 @@ performance_history = [unqueried_score]
 # Allow our model to query our unlabeled dataset for the most
 # informative points according to our query strategy (uncertainty sampling).
 for index in range(N_QUERIES):
-  query_index, query_instance = learner.query(X_pool)
+    
+  query_index = np.random.randint(low = 0, high=len(X_pool), size=1)
 
   # Teach our ActiveLearner model the record it has requested.
   X, y = X_pool[query_index].reshape(1, -1), y_pool[query_index].reshape(1, )

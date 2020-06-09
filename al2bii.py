@@ -14,13 +14,14 @@ from sklearn.datasets import load_iris
 iris = load_iris()
 
 # visualizing the classes
+'''
 with plt.style.context('seaborn-white'):
     plt.figure(figsize=(7, 7))
     pca = PCA(n_components=2).fit_transform(iris['data'])
     plt.scatter(x=pca[:, 0], y=pca[:, 1], c=iris['target'], cmap='viridis', s=50)
     plt.title('The iris dataset')
     plt.show()
-
+'''
 
 from copy import deepcopy
 
@@ -57,11 +58,9 @@ for member_idx in range(n_members):
 
 # assembling the committee
 committee = Committee(learner_list=learner_list,
-                        query_strategy=max_disagreement_sampling)
+                        query_strategy=vote_entropy_sampling)
 
-
-
-
+'''
 with plt.style.context('seaborn-white'):
     plt.figure(figsize=(n_members*7, 7))
     for learner_idx, learner in enumerate(committee):
@@ -69,15 +68,18 @@ with plt.style.context('seaborn-white'):
         plt.scatter(x=pca[:, 0], y=pca[:, 1], c=learner.predict(iris['data']), cmap='viridis', s=50)
         plt.title('Learner no. %d initial predictions' % (learner_idx + 1))
     plt.show()
+'''
 
 unqueried_score = committee.score(iris['data'], iris['target'])
 
+'''
 with plt.style.context('seaborn-white'):
     plt.figure(figsize=(7, 7))
     prediction = committee.predict(iris['data'])
     plt.scatter(x=pca[:, 0], y=pca[:, 1], c=prediction, cmap='viridis', s=50)
     plt.title('Committee initial predictions, accuracy = %1.3f' % unqueried_score)
     plt.show()
+'''
 
 performance_history = [unqueried_score]
 
@@ -96,7 +98,7 @@ for idx in range(n_queries):
     print('Accuracy after query {n}: {acc:0.4f}'.format(n=idx + 1, acc=committee.score(iris['data'], iris['target'])))
 
 
-
+'''
 # visualizing the final predictions per learner
 with plt.style.context('seaborn-white'):
     plt.figure(figsize=(n_members*7, 7))
@@ -115,7 +117,7 @@ with plt.style.context('seaborn-white'):
     plt.title('Committee predictions after %d queries, accuracy = %1.3f'
               % (n_queries, committee.score(iris['data'], iris['target'])))
     plt.show()
-
+'''
 # Plot our performance over time.
 fig, ax = plt.subplots(figsize=(8.5, 6), dpi=130)
 
