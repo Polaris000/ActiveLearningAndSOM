@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
+from sklearn.datasets import load_iris
 
 data = pd.read_csv('devindex.csv')
 scaler = StandardScaler()
@@ -37,6 +38,10 @@ X_raw = np.array(data.iloc[:, :-1])
 y_raw = np.array(data.iloc[:, -1])
 # print(X_full, y_full)
 
+dataset = load_iris()
+X_raw = dataset['data']
+y_raw = dataset['target']
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
@@ -53,7 +58,7 @@ from modAL.models import ActiveLearner
 
 percent = 0.1
 n_labeled_examples = X_raw.shape[0] # len
-training_indices = np.random.randint(low=0, high=n_labeled_examples + 1, size=int(n_labeled_examples * percent))
+training_indices = np.random.randint(low=0, high=n_labeled_examples, size=int(n_labeled_examples * percent))
 
 X_train = X_raw[training_indices]
 y_train = y_raw[training_indices]
@@ -94,6 +99,7 @@ num_queried = 0
 # learning until the accuracy reaches a given threshold
 while num_queried < 20:
     stream_idx = np.random.choice(range(len(X_stream)))
+    print(stream_idx)
     if classifier_uncertainty(learner, X_stream[stream_idx].reshape(1, -1)) >= 0.4:
         learner.teach(X_stream[stream_idx].reshape(1, -1), y_stream[stream_idx].reshape(-1, ))
         new_score = learner.score(X_stream, y_stream)

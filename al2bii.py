@@ -37,18 +37,19 @@ from modAL.disagreement import vote_entropy_sampling, max_disagreement_sampling
 n_members = 5
 learner_list = list()
 
+# initial training data
+percent = 0.1
+n_labeled_examples = X_pool.shape[0]
+train_idx = np.random.randint(low=0, high=n_labeled_examples, size=int(n_labeled_examples * percent))
+X_train = X_pool[train_idx]
+y_train = y_pool[train_idx]
+
+# creating a reduced copy of the data with the known instances removed
+X_pool = np.delete(X_pool, train_idx, axis=0)
+y_pool = np.delete(y_pool, train_idx)
+
+
 for member_idx in range(n_members):
-    # initial training data
-    percent = 0.1
-    n_labeled_examples = X_pool.shape[0]
-    train_idx = np.random.randint(low=0, high=n_labeled_examples, size=int(n_labeled_examples * percent))
-    X_train = X_pool[train_idx]
-    y_train = y_pool[train_idx]
-
-    # creating a reduced copy of the data with the known instances removed
-    X_pool = np.delete(X_pool, train_idx, axis=0)
-    y_pool = np.delete(y_pool, train_idx)
-
     # initializing learner
     learner = ActiveLearner(
         estimator=RandomForestClassifier(),
@@ -83,6 +84,7 @@ performance_history = [unqueried_score]
 n_queries = 4 * n_initial
 for idx in range(n_queries):
     query_idx, query_instance = committee.query(X_pool)
+    print(query_idx)
     committee.teach(
         X=X_pool[query_idx].reshape(1, -1),
         y=y_pool[query_idx].reshape(1, )
